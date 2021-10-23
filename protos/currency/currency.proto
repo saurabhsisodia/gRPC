@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package currency;
+
+message RateRequest {
+	CurrencyValue Base = 1;
+	CurrencyValue Destination = 2;
+}
+
+message RateResponse {
+	float Rate = 1;
+}
+
+
+
+service Currency {
+	rpc GetRate(RateRequest) returns (RateResponse);
+}
+enum CurrencyValue {
+	a=0;
+	b=1;
+	c=2;
+	d=3;
+	e=4;
+	f=5;
+	g=6;
+	h=7;
+	i=8;
+	j=9;
+}
+option go_package="github.com/saurabhsisodia/currency";
+
