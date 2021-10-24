@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"fmt"
 	"encoding/xml"
-
+	
 )
 
 type CurrencyRate struct{
@@ -15,7 +15,18 @@ type CurrencyRate struct{
 }
 
 // constructor
+func (cr *CurrencyRate) GetRate(base,destination string) (float64,error){
+	baseRate,ok:=cr.rate[base]
+	if !ok{
+		return 0,fmt.Errorf("Invalid base %s\n",base)
+	}
+	destRate,ok:=cr.rate[destination]
+	if !ok{
+		return 0,fmt.Errorf("Invalid Destination %s\n",destination)
+	}
 
+	return destRate/baseRate,nil
+}
 func NewCurrencyRate (l *log.Logger)(*CurrencyRate,error){
 	mp:=make(map[string]float64)
 	cr:=&CurrencyRate{l,mp}

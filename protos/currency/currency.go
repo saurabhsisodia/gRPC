@@ -2,19 +2,31 @@ package currency
 import (
 	"log"
 	"context"
+
+	data "github.com/saurabhsisodia/gRPC/protos/data"
 )
 
 type Currency struct{
 	logger *log.Logger
+	cr *data.CurrencyRate
 }
 
 func NewCurrency(l *log.Logger)*Currency{
-	return &Currency{l}
+	cr,err:=data.NewCurrencyRate(l)
+	if err!=nil{
+		log.Fatal(err)
+	}
+	return &Currency{l,cr}
 }
 
 func (c *Currency) GetRate(ctx context.Context,rr *RateRequest) (*RateResponse,error){
 	c.logger.Println("Handle GetRate","base",rr.GetBase(),"Destination",rr.GetDestination())
-	return &RateResponse{Rate:0.5},nil
+
+	rate,err:=c.cr.GetRate(rr.GetBase().String(),rr.GetDestination().String())
+	if err!=nil{
+		c.logger.Fatal(err)
+	}
+	return &RateResponse{Rate:rate},nil
 
 }
 
